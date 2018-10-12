@@ -23,19 +23,19 @@
                       <option value="P">Perempuan</option>
                     </select>
                   </div>
-                  <div class="form-group" name="classification">
-                    <select class="form-control input-lg" name="classification" required>
-                      <option value="0" selected="true" disabled="true">-- Pilih Klasifikasi --</option>
-                      @foreach ($classifications as $classification)
-                        <option value="{{ $classification->id }}">{{ $classification->name }}</option>
-                      @endforeach
-                    </select>
-                  </div>
                   <div class="form-group">
                     <select class="form-control input-lg" name="is_relay" id="is_relay" required>
                       <option value="0" selected="true" disabled="true">-- Pilih Jenis Perlombaan --</option>
                       <option value="1">ESTAFET</option>
                       <option value="0">PEORANGAN</option>
+                    </select>
+                  </div>
+                  <div class="form-group" name="classification" id="classification">
+                    <select class="form-control input-lg" name="classification" required>
+                      <option value="0" selected="true" disabled="true">-- Pilih Klasifikasi --</option>
+                      @foreach ($classifications as $classification)
+                        <option value="{{ $classification->id }}">{{ $classification->name }}</option>
+                      @endforeach
                     </select>
                   </div>
                   <div class="form-group">

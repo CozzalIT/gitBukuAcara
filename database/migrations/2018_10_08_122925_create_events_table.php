@@ -17,7 +17,7 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->char('gender');
-            $table->unsignedInteger('classification_id');
+            $table->unsignedInteger('classification_id')->nullable();
             $table->unsignedInteger('race_number_id');
             $table->boolean('is_relay');
             $table->timestamps();
