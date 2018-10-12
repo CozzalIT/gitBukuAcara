@@ -1,150 +1,73 @@
-<div class="col-lg-4 group-seri3">
-  <form class="" action="{{ route('selectAthlete') }}" method="post">
+<div class="col-lg-12 group-seri3">
+  <form class="" action="{{ route('addResult') }}" id="formTurn1" method="post">
     {{ csrf_field() }}
     <div class="panel panel-default">
-      <div class="panel-heading">Seri 3</div>
       <div class="panel-body">
-        <table class="table">
+        <button type="submit" class="btn btn-primary " name="button" id="save-seri3" style="margin:5px;">Simpan</button>
+        <hr>
+        <table data-toggle="table" data-url="#"  data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-order="desc">
           <thead>
             <tr>
-              <th>
-                <center>
-                  Lintasan
-                </center>
-              </th>
-              <th>
-                <center>
-                  Atlet
-                </center>
-              </th>
+              <th data-field="track" data-sortable="true">Lintasan</th>
+              <th data-field="atlet" data-sortable="true">ATLET</th>
+              <th data-field="dateBirth" data-sortable="true">TGL LAHIR</th>
+              <th data-field="classification" data-sortable="true">KELAS</th>
+              <th data-field="result" data-sortable="true">HASIL</th>
+              <th data-field="dq" data-sortable="true">DQ</th>
+              <th data-field="dn" data-sortable="true">DN</th>
+              <th data-field="medal" data-sortable="true">MEDALI</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <center>
-                  <h5>1</h5>
-                </center>
-              </td>
-              <td>
-                <select class="form-control select2" data-validation="required" name="seri3[]" id="seri3[]">
-                  <option value="0">-- Pilih Atlet --</option>
-                  @foreach ($athlete_lists as $athlete_list)
-                    <option value="{{ "1/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, 1) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <center>
-                  <h5>2</h5>
-                </center>
-              </td>
-              <td>
-                <select class="form-control select2" data-validation="required" name="seri3[]" id="seri3[]">
-                  <option value="0">-- Pilih Atlet --</option>
-                  @foreach ($athlete_lists as $athlete_list)
-                    <option value="{{ "2/".$athlete_list->athlete_id }}"{{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, 2) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <center>
-                  <h5>3</h5>
-                </center>
-              </td>
-              <td>
-                <select class="form-control select2" data-validation="required" name="seri3[]" id="seri3[]">
-                  <option value="0">-- Pilih Atlet --</option>
-                  @foreach ($athlete_lists as $athlete_list)
-                    <option value="{{ "3/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, 3) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <center>
-                  <h5>4</h5>
-                </center>
-              </td>
-              <td>
-                <select class="form-control select2" data-validation="required" name="seri3[]" id="seri3[]">
-                  <option value="0">-- Pilih Atlet --</option>
-                  @foreach ($athlete_lists as $athlete_list)
-                    <option value="{{ "4/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, 4) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <center>
-                  <h5>5</h5>
-                </center>
-              </td>
-              <td>
-                <select class="form-control select2" data-validation="required" name="seri3[]" id="seri3[]">
-                  <option value="0">-- Pilih Atlet --</option>
-                  @foreach ($athlete_lists as $athlete_list)
-                    <option value="{{ "5/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, 5) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <center>
-                  <h5>6</h5>
-                </center>
-              </td>
-              <td>
-                <select class="form-control select2" data-validation="required" name="seri3[]" id="seri3[]">
-                  <option value="0">-- Pilih Atlet --</option>
-                  @foreach ($athlete_lists as $athlete_list)
-                    <option value="{{ "6/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, 6) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <center>
-                  <h5>7</h5>
-                </center>
-              </td>
-              <td>
-                <select class="form-control select2" data-validation="required" name="seri3[]" id="seri3[]">
-                  <option value="0">-- Pilih Atlet --</option>
-                  @foreach ($athlete_lists as $athlete_list)
-                    <option value="{{ "7/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, 7) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <center>
-                  <h5>8</h5>
-                </center>
-              </td>
-              <td>
-                <select class="form-control select2" data-validation="required" name="seri3[]" id="seri3[]">
-                  <option value="0">-- Pilih Atlet --</option>
-                  @foreach ($athlete_lists as $athlete_list)
-                    <option value="{{ "8/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, 8) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
+            @for ($i=1; $i < 9; $i++)
+              @php
+                if ($participant = App\Event::showParticipant($event[0]->id, 3, $i) == null) {
+                  $participant = null;
+                }else{
+                  $participant = App\Event::showParticipant($event[0]->id, 3, $i)[0];
+                }
+              @endphp
+              <tr>
+                <td>{{ $i }}</td>
+                <td>{{ ($participant != null) ? $participant->name : " " }}</td>
+                <td>{{ ($participant != null) ? $participant->birth_date : " " }}</td>
+                <td>{{ ($participant != null) ? $participant->classification_name : " " }}</td>
+                <td>
+                  @if ($participant != null)
+                    <input class="input-time3{{$i}}" type="text" name="time[{{$i}}]" value="{{ ($participant->result_time != null) ? "0".$participant->result_time : " " }}" style="border:none; font-weight:bold;" placeholder="-- : -- : ---" data-validation="required">
+                    <input class="" type="hidden" name="athlete_id[{{$i}}]" value="{{ ($participant != null) ? $participant->athlete_id : " " }}">
+                    <span class="label label-danger">{{ $errors->first('time.'.$i) }}</span>
+                    <script>
+                      var cleaveNumeral = new Cleave('.input-time3{{$i}}', {
+                        numericOnly: true,
+                        delimiters: [':', ':'],
+                        blocks: [2, 2, 3]
+                      });
+                    </script>
+                  @endif
+                </td>
+                <td>
+                  @if ($participant != null)
+                    <center>
+                      <input type="checkbox" name="is_dq[{{$i}}]" value="true" {{ ($participant->is_dq == 1) ? 'checked' : '' }}>
+                    </center>
+                  @endif
+                </td>
+                <td>
+                  @if ($participant != null)
+                    <center>
+                      <input type="checkbox" name="is_dn[{{$i}}]" value="true" {{ ($participant->is_dn == 1) ? 'checked' : '' }}>
+                    </center>
+                  @endif
+                </td>
+                <td>{{ ($participant != null) ? $participant->medal : " " }}</td>
+              </tr>
+            @endfor
           </tbody>
         </table>
-        <button type="submit" class="btn btn-primary pull-right" name="button" id="save-seri3">Simpan</button>
-        <input type="hidden" name="event_id" id="event_id" value="{{$event[0]->id}}">
       </div>
-  </div>
+    </div>
+    <input type="hidden" name="event_id" id="event_id" value="{{$event[0]->id}}">
+    <input type="hidden" name="turn" id="turn" value="3">
   </form>
 </div>

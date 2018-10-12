@@ -15,5 +15,6 @@
     <li class="@yield('athlete')"><a href="{{route('athletePage')}}"><em class="fa fa-user">&nbsp;</em> Atlet</a></li>
     <li class="@yield('event')"><a href="{{route('eventPage')}}"><em class="fa fa-flag">&nbsp;</em> Acara</a></li>
     <li class="@yield('record')"><a href="{{route('recordPage')}}"><em class="fa fa-sitemap">&nbsp;</em> Rekor</a></li>
+    {{-- <li class="@yield('report')"><a href="{{route('reportPage')}}"><em class="fa fa-sitemap">&nbsp;</em> Laporan</a></li> --}}
   </ul>
 </div><!--/.sidebar-->

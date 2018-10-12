@@ -30,6 +30,7 @@ class AthleteController extends Controller
         $athletes = new Athlete;
         $athletes->name = $request->name;
         $athletes->gender = $request->gender;
+        $athletes->birth_date = $request->birth_date;
         $athletes->address = $request->address;
         $athletes->classification_id = $request->classification;
         $athletes->save();

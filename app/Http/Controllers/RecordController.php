@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Classification;
 use App\RaceNumber;
 use App\Record;
+use App\Event;
 
 class RecordController extends Controller
 {
@@ -23,6 +24,7 @@ class RecordController extends Controller
 
     public function addRecord(Request $request)
     {
+        // dd($request);
         $this->validate($request, [
                   'time' => 'required|min:9'
         ]);
@@ -39,6 +41,8 @@ class RecordController extends Controller
         $records->location = $request->location;
         $records->recorded_at = $request->recorded_at;
         $records->save();
+
+        $records->addEventRecord($request->athlete_gender,  $request->classification, $request->race_number, $request->type);
 
         try{
             return redirect()
