@@ -43,4 +43,9 @@
         'uses' => 'EventController@selectAthlete',
         'as'  => 'selectAthlete'
     ]);
+
+    Route::post('/event/result/add',[
+        'uses' => 'EventController@addResult',
+        'as'  => 'addResult'
+    ]);
     //CRUD -->

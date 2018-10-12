@@ -1,11 +1,10 @@
-
 @extends('_layout.master')
 
-@section('title', 'Acara')
+@section('title', 'Laporan')
 @section('event', 'active')
 
 @section('breadcrumb')
-  <li class="active">Acara</li>
+  <li class="active">laporan</li>
 @endsection
 
 @section('page-header')
@@ -14,33 +13,6 @@
 
 @section('content')
   <meta name="csrf-token" content="{{ csrf_token() }}"/>
-
-  @if(session('success'))
-    <div class="alert bg-info" role="alert">
-      <em class="fa fa-lg fa-check">&nbsp;</em>
-        {{ session('success') }}
-      <a href="#" class="pull-right close-btn" >
-        <em class="fa fa-lg fa-close"></em>
-      </a>
-    </div>
-  @endif
-  @if ($errors->any())
-    <div class="alert bg-warning" role="alert">
-      <em class="fa fa-lg fa-warning">&nbsp;</em>
-        ERROR!!
-      <a href="#" class="pull-right close-btn">
-        <em class="fa fa-lg fa-close"></em>
-      </a>
-      <ul>
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
-  @endif
-
-  @include('event.filter.eventTitle')
-
   <div class="row">
     <div class="col-lg-12">
       <h2>Hasil Perlombaan</h2>
@@ -72,12 +44,6 @@
 @endsection
 
 @section('extra-js')
-  <script>
-    $(document).on('click', '#delete', function(){
-      var id=$(this).data('id');
-      $('#deletedId').val(id);
-    });
-  </script>
   <script src="{{ URL::asset('js/bootstrap-datepicker.js') }}"></script>
   <script src="{{ URL::asset('js/bootstrap-table.js') }}"></script>
   <script src="{{ URL::asset('js/delete-alert.js') }}"></script>

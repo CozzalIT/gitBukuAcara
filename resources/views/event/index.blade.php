@@ -41,6 +41,7 @@
     <div class="col-lg-12">
       <div class="panel panel-default">
         <a href="#" data-toggle="modal" data-target="#popupAdd" class="btn btn-primary button-tambah"><em class="fa fa-plus">&nbsp;</em> Tambah Acara</a>
+        <a href="#" data-toggle="modal" data-target="#popupReport" class="btn btn-primary button-tambah"><em class="fa fa-print">&nbsp;</em> Laporan Acara</a>
         <div class="panel-body">
           <table data-toggle="table" data-url="#"  data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name" data-sort-order="desc">
             <thead>

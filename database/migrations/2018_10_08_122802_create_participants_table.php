@@ -21,6 +21,8 @@ class CreateParticipantsTable extends Migration
             $table->integer('team')->nullable();
             $table->integer('pra_event_time')->nullable();
             $table->integer('result_time')->nullable();
+            $table->boolean('is_dq');
+            $table->boolean('is_dn');
             $table->string('medal')->nullable();
             $table->timestamps();
         });

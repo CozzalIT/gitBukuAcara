@@ -89,3 +89,39 @@
         </form>
       </div>
     </div>
+
+    <!--Modal Report-->
+      <div class="modal fade" id="popupReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <form class="" action="#" method="post">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Laporan Acara</h4>
+              </div>
+              <div class="modal-body" style="padding-bottom: 0px;">
+                <div class="panel panel-default" style="margin-bottom: 0px;">
+                  <div class="panel-body">
+                    <fieldset>
+                      <div class="form-group">
+                        <select class="form-control input-lg" name="race_number" id="race_number" required>
+                          <option value="0" selected="true" disabled="true">-- Pilih Acara --</option>
+                          <option value="0">Semua Acara</option>
+                          <option value="0">Acara 001</option>
+                          <option value="0">Acara 002</option>
+                          <option value="0">Acara 003</option>
+                        </select>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+              {{ csrf_field() }}
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Download Excel</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>

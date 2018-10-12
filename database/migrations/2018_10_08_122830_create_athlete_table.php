@@ -16,6 +16,7 @@ class CreateAthleteTable extends Migration
         Schema::create('athletes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->date('birth_date');
             $table->char('gender');
             $table->string('address');
             $table->unsignedInteger('classification_id');

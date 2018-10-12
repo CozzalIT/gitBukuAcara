@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class Record extends Model
 {
@@ -31,5 +32,29 @@ class Record extends Model
             $name = $key->race_numbers_name;
         }
         return $name;
+    }
+
+    public function addEventRecord($gender, $classification_id, $race_number_id, $type)
+    {
+        $record_id = DB::table('records')->pluck('id')->last();
+
+        $events = DB::table('events')
+                    ->where('race_number_id', $race_number_id)
+                    ->where('classification_id', $classification_id)
+                    ->where('gender', $gender)
+                    ->get();
+
+        $time = Carbon::now();
+
+        foreach ($events as $event) {
+          $input = DB::table('event_records')->insert([
+            'record_id' => $record_id,
+            'event_id' => $event->id,
+            'type' => $type,
+            'created_at' => $time->toDateTimeString(),
+            'updated_at' => $time->toDateTimeString()
+          ]);
+        }
+        return true;
     }
 }

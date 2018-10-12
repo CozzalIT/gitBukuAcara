@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Event;
 use App\Athlete;
 use App\Classification;
+use App\Participant;
 use App\RaceNumber;
 
 class EventController extends Controller
@@ -173,6 +174,92 @@ class EventController extends Controller
     public function deleteEvent (Request $request) {
         $id = $request->deletedId;
         $delete = Event::where('id', $id)->delete();
+        try{
+            return redirect()
+                   ->back()
+                   ->withSuccess('Berhasil menghapus data');
+        }
+        catch(QueryException $e){
+           return redirect()->back()->with(['error' => "Error."]);
+        }
+    }
+
+    public function addResult (Request $request) {
+      // dd($request);
+        $this->validate($request, [
+                  'time' => 'required|array|min:1',
+                  'time.*'  => 'required|string|min:9'
+        ]);
+
+        for ($i=1; $i < 9; $i++) {
+          if (isset($request->athlete_id[$i])) {
+            $athlete_id[$i] = str_replace(":", "", $request->athlete_id[$i]);
+          }
+          if (isset($request->time[$i])) {
+            if (!isset($request->is_dq[$i]) and !isset($request->is_dn[$i])) {
+              if ($request->time[$i] != 0) {
+                $time[$i] = str_replace(":", "", $request->time[$i]);
+                Participant::where('event_id', $request->event_id)
+                              ->where('track', $i)
+                              ->where('turn', $request->turn)
+                              ->update(['result_time' => $time[$i]]);
+              }
+            }
+
+            if(isset($request->is_dq[$i])){
+              Participant::where('event_id', $request->event_id)
+                            ->where('track', $i)
+                            ->where('turn', $request->turn)
+                            ->update(['is_dq' => 1]);
+            }else{
+              Participant::where('event_id', $request->event_id)
+                            ->where('track', $i)
+                            ->where('turn', $request->turn)
+                            ->update(['is_dq' => 0]);
+            }
+            if(isset($request->is_dn[$i])){
+              Participant::where('event_id', $request->event_id)
+                            ->where('track', $i)
+                            ->where('turn', $request->turn)
+                            ->update(['is_dn' => 1]);
+            }else {
+              Participant::where('event_id', $request->event_id)
+                            ->where('track', $i)
+                            ->where('turn', $request->turn)
+                            ->update(['is_dn' => 0]);
+            }
+          }
+        }
+
+        sort($time);
+        //Reset Medal
+        Participant::where('event_id', $request->event_id)
+                    ->update(['medal' => null]);
+
+        if (isset($time[0])) {
+          //Emas
+          Participant::where('event_id', $request->event_id)
+          ->where('turn', $request->turn)
+          ->where('result_time', $time[0])
+          ->update(['medal' => 'Emas']);
+        }
+
+        if (isset($time[1])) {
+          //Perak
+          Participant::where('event_id', $request->event_id)
+          ->where('turn', $request->turn)
+          ->where('result_time', $time[1])
+          ->update(['medal' => 'Perak']);
+        }
+
+        if (isset($time[2])) {
+          //Perunggu
+          Participant::where('event_id', $request->event_id)
+                      ->where('turn', $request->turn)
+                      ->where('result_time', $time[2])
+                      ->update(['medal' => 'Perunggu']);
+        }
+
         try{
             return redirect()
                    ->back()

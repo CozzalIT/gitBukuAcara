@@ -94,18 +94,36 @@ class Event extends Model
       return count($isFilled);
     }
 
+    public static function checkMedal($athlete_id)
+    {
+      $checkMedal = DB::table('participants')
+                      ->where('athlete_id', '=', $athlete_id)
+                      ->get();
+
+      return count($checkMedal);
+    }
+
     public static function showParticipant($event_id, $turn, $track)
     {
       $participant = DB::table('participants')
                           ->join('athletes','participants.athlete_id', '=', 'athletes.id')
-                          ->select('athletes.id as athlete_id', 'athletes.name')
+                          ->join('classifications','athletes.classification_id', '=', 'classifications.id')
+                          ->select(
+                            'athletes.id as athlete_id',
+                            'athletes.name', 'athletes.birth_date',
+                            'classifications.name as classification_name',
+                            'participants.medal', 'participants.result_time', 'participants.is_dq', 'participants.is_dn'
+                            )
                           ->where('event_id', '=', $event_id)
-                          // ->where('athlete_id', '=', $athlete_id)
                           ->where('turn', '=', $turn)
                           ->where('track', '=', $track)
                           ->get();
 
-      return $participant;
+      if (count($participant) > 0) {
+        return $participant;
+      }else{
+        return false;
+      }
     }
 
     public static function addParticipants($event_id, $athlete_id, $turn, $track)
@@ -114,6 +132,8 @@ class Event extends Model
       $input = DB::table('participants')->insert([
         'event_id' => $event_id,
         'athlete_id' => $athlete_id,
+        'is_dq' => 0,
+        'is_dn' => 0,
         'turn' => $turn,
         'track' => $track,
         'created_at' => $time->toDateTimeString(),
