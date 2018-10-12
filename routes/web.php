@@ -19,3 +19,5 @@ include 'mod_route/dashboard.php';
 include 'mod_route/atlete.php';
 include 'mod_route/record.php';
 include 'mod_route/event.php';
+
+Route::get('blabla','ExcelController@index');
