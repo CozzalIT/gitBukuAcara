@@ -93,7 +93,7 @@
     <!--Modal Report-->
       <div class="modal fade" id="popupReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-          <form class="" action="#" method="post">
+          <form class="" action="{{ route('printExcel') }}" method="post">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -107,9 +107,9 @@
                         <select class="form-control input-lg" name="race_number" id="race_number" required>
                           <option value="0" selected="true" disabled="true">-- Pilih Acara --</option>
                           <option value="0">Semua Acara</option>
-                          <option value="0">Acara 001</option>
-                          <option value="0">Acara 002</option>
-                          <option value="0">Acara 003</option>
+                          @foreach ($events as $e)
+                          <option value="{{$e->id}}">{{$e->name}}</option>
+                          @endforeach
                         </select>
                       </div>
                     </fieldset>

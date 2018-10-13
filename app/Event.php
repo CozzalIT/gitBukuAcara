@@ -12,7 +12,7 @@ class Event extends Model
     {
         $peparnas = DB::table('event_records')
                           ->join('records', 'event_records.record_id', '=', 'records.id')
-                          ->select('records.time', 'records.athlete_name', 'records.athlete_address', 'records.recorded_at')
+                          ->select('records.time', 'records.athlete_name', 'records.athlete_address', 'records.recorded_at', 'records.location')
                           ->where('event_id', $event_id)
                           ->where('event_records.type', 'PEPARNAS')
                           ->get();
@@ -24,7 +24,7 @@ class Event extends Model
     {
         $peparda = DB::table('event_records')
                           ->join('records', 'event_records.record_id', '=', 'records.id')
-                          ->select('records.time', 'records.athlete_name', 'records.athlete_address', 'records.recorded_at')
+                          ->select('records.time', 'records.athlete_name', 'records.athlete_address', 'records.recorded_at', 'records.location')
                           ->where('event_records.event_id', $event_id)
                           ->where('event_records.type', 'PEPARDA')
                           ->get();
@@ -38,7 +38,7 @@ class Event extends Model
                     ->select('name as classification_name')
                     ->where('id', $id)
                     ->get();
-
+        $name = "Undefined";
         foreach ($classification as $key) {
             $name = $key->classification_name;
         }
@@ -51,7 +51,7 @@ class Event extends Model
                     ->select('name as race_numbers_name')
                     ->where('id', $id)
                     ->get();
-
+        $name = "Undefined";
         foreach ($race_number as $key) {
             $name = $key->race_numbers_name;
         }
