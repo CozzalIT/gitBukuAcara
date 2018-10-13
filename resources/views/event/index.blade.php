@@ -71,7 +71,7 @@
                       PERORANGAN
                     @endif
                   </td>
-                  <td data-sortable="true">{{ $event->selectClassification($event->classification_id) }}</td>
+                  <td data-sortable="true">{{ (isset($event->classification_id)) ? $event->selectClassification($event->classification_id) : "MAX 49 POINT"  }}</td>
                   <td data-sortable="true">
                     @if ($event->gender == "L")
                       LAKI-LAKI
@@ -96,15 +96,26 @@
                         <li class="divider"></li>
                         <li><a href="#">Pra Acara</a></li>
                         <li>
-                          <a
-                            href="{{action('EventController@filterAthlete', [
-                              'event_id'=>$event->id,
-                              'race_number_id'=> $event->race_number_id,
-                              'classification_id'=> $event->classification_id,
-                              'gender'=> $event->gender])
-                            }}"
-                            id="show" name="show">Filter Atlet
-                          </a>
+                          @if ($event->is_relay == 0)
+                            <a
+                              href="{{action('EventController@filterAthlete', [
+                                'event_id'=>$event->id,
+                                'race_number_id'=> $event->race_number_id,
+                                'classification_id'=> $event->classification_id,
+                                'gender'=> $event->gender])
+                              }}"
+                              id="show" name="show">Filter Atlet
+                            </a>
+                          @else
+                            <a
+                              href="{{action('EventController@filterRelay', [
+                                'event_id'=>$event->id,
+                                'race_number_id'=> $event->race_number_id,
+                                'gender'=> $event->gender])
+                              }}"
+                              id="show" name="show">Filter Atlet
+                            </a>
+                          @endif
                         </li>
                         <li>
                           <a

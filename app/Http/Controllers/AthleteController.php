@@ -35,27 +35,28 @@ class AthleteController extends Controller
         $athletes->classification_id = $request->classification;
         $athletes->save();
 
-        $athlete_id = DB::table('athletes')->pluck('id')->last();
+        $athlete_id = DB::table('athletes')->where('id', DB::raw("(select max(`id`) from athletes)"))->get();
+        // dd($athlete_id[0]->id);
 
         if ($request->single1 != 0) {
           $race_number_id = $request->single1;
-          $athletes->addAthleteRaceNumber($athlete_id, $race_number_id);
+          $athletes->addAthleteRaceNumber($athlete_id[0]->id, $race_number_id);
         }
         if ($request->single2 != 0) {
           $race_number_id = $request->single2;
-          $athletes->addAthleteRaceNumber($athlete_id, $race_number_id);
+          $athletes->addAthleteRaceNumber($athlete_id[0]->id, $race_number_id);
         }
         if ($request->single3 != 0) {
           $race_number_id = $request->single3;
-          $athletes->addAthleteRaceNumber($athlete_id, $race_number_id);
+          $athletes->addAthleteRaceNumber($athlete_id[0]->id, $race_number_id);
         }
         if ($request->relay1 != 0) {
           $race_number_id = $request->relay1;
-          $athletes->addAthleteRaceNumber($athlete_id, $race_number_id);
+          $athletes->addAthleteRaceNumber($athlete_id[0]->id, $race_number_id);
         }
         if ($request->relay2 != 0) {
           $race_number_id = $request->relay2;
-          $athletes->addAthleteRaceNumber($athlete_id, $race_number_id);
+          $athletes->addAthleteRaceNumber($athlete_id[0]->id, $race_number_id);
         }
 
         // return redirect()->back();

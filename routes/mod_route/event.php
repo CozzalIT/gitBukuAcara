@@ -10,6 +10,11 @@
         'as'  => 'filterAthlete'
     ]);
 
+    Route::get('/event/relay/{event_id}/{race_number_id}/{gender}',[
+        'uses' => 'EventController@filterRelay',
+        'as'  => 'filterRelay'
+    ]);
+
     Route::get('event/result/{event_id}/{race_number_id}/{classification_id}/{gender}',[
         'uses' => 'EventController@eventResult',
         'as' => 'eventResult'
@@ -42,6 +47,11 @@
     Route::post('/event/selectAthlete',[
         'uses' => 'EventController@selectAthlete',
         'as'  => 'selectAthlete'
+    ]);
+
+    Route::post('/event/selectRelay',[
+        'uses' => 'EventController@selectRelay',
+        'as'  => 'selectRelay'
     ]);
 
     Route::post('/event/result/add',[

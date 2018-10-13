@@ -30,9 +30,9 @@
                       <option value="0">PEORANGAN</option>
                     </select>
                   </div>
-                  <div class="form-group" name="classification" id="classification">
+                  <div class="form-group hidden" name="classification" id="classification">
                     <select class="form-control input-lg" name="classification" required>
-                      <option value="0" selected="true" disabled="true">-- Pilih Klasifikasi --</option>
+                      <option value="0" selected="true">-- Pilih Klasifikasi --</option>
                       @foreach ($classifications as $classification)
                         <option value="{{ $classification->id }}">{{ $classification->name }}</option>
                       @endforeach

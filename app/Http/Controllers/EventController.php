@@ -25,6 +25,31 @@ class EventController extends Controller
         ]);
     }
 
+    public function filterRelay($event_id, $race_number_id, $gender){
+        $athlete_lists = DB::table('athlete_race_numbers')
+                            ->join('athletes', 'athletes.id', '=', 'athlete_race_numbers.athlete_id')
+                            ->select('athletes.id as athlete_id', 'athletes.name')
+                            ->where('athlete_race_numbers.race_number_id', $race_number_id)
+                            ->where('athletes.gender', $gender)
+                            ->get();
+
+        // dd($athlete_lists);
+        $isFilled = Event::all();
+        $peparnas = Event::selectPeparnas($event_id);
+        $peparda = Event::selectPeparda($event_id);
+        $event = Event::showAthlete($event_id);
+
+        $race_number = Event::showRaceNumber($race_number_id);
+        return view('event.relay.index', [
+          'isFilled' => $isFilled,
+          'peparnas' => $peparnas,
+          'peparda' => $peparda,
+          'event' => $event,
+          'race_number' => $race_number,
+          'athlete_lists' => $athlete_lists
+        ]);
+    }
+
     public function filterAthlete($event_id, $race_number_id, $classification_id, $gender)
     {
         $athlete_lists = DB::table('athlete_race_numbers')
@@ -104,6 +129,11 @@ class EventController extends Controller
     //AJAX -->
 
     //CRUD <--
+    public function selectRelay(Request $request)
+    {
+        dd($request);
+    }
+
     public function selectAthlete(Request $request)
     {
         $event_id = $_POST['event_id'];
@@ -155,7 +185,9 @@ class EventController extends Controller
         $events = new Event;
         $events->name = $request->name;
         $events->gender = $request->gender;
-        $events->classification_id = $request->classification;
+        if ($request->is_relay == 0) {
+          $events->classification_id = $request->classification;
+        }
         $events->is_relay = $request->is_relay;
         $events->race_number_id = $request->race_number;
         $events->save();
