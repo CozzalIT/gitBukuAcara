@@ -108,7 +108,7 @@
                           <option value="0" selected="true" disabled="true">-- Pilih Acara --</option>
                           <option value="0">Semua Acara</option>
                           @foreach ($events as $e)
-                          <option value="{{$e->id}}">{{$e->name}}</option>
+                          <option value="{{$e->id}}">Acara {{$e->name}}</option>
                           @endforeach
                         </select>
                       </div>

@@ -16,6 +16,8 @@ class ExcelController extends Controller
 
 	protected $content = array( 'font'=>'Tahoma','font-size'=>10,'halign'=>'center', 'valign'=>'center', 'height'=>19, 'border'=>'left,right,top,bottom');		
 
+    protected $Serie = array( 'font'=>'Tahoma','font-size'=>11,'halign'=>'center', 'valign'=>'center', 'height'=>21, 'border'=>'left,right,top,bottom');  
+
 	protected $blank = array('height'=>20, 'widths'=>[10,40,25,13,35,20,15]);	
 
 	protected $mergedPos=1;	
@@ -79,8 +81,8 @@ class ExcelController extends Controller
 
     private function printSingle($writer, $tool, $e, $data){
 
-		$race_number = $tool->selectRaceNumber($data["rN_id"]);
-		$class = $tool->selectClassification($data["class_id"]);
+		$race_number = $tool->selectRaceNumber($data["race_number_id"]);
+		$class = $tool->selectClassification($data["classification_id"]);
 		$gender = $e->genders($data["gender"]);
 
 		$pnD = $tool->selectPeparnas($data["id"]);
@@ -89,12 +91,12 @@ class ExcelController extends Controller
 		$r_pn = "-";
 		if($pnD->count()!=0) {
 			$pn = $pnD[0];
-			$r_pn = $e->formate($pn->time)." $pn->athlete_name($pn->athlete_address) - $pn->location, $pn->recorded_at";			
+			$r_pn = $e->formate($pn->time)." $pn->athlete_name($pn->athlete_address) - $pn->location, ".$e->tanggal($pn->recorded_at);			
 		}
 		$r_pd = "-";
 		if($pdD->count()!=0){
 			$pd = $pdD[0];
-			$r_pd = $e->formate($pd->time)." $pd->athlete_name($pd->athlete_address) - $pd->location, $pd->recorded_at";			
+			$r_pd = $e->formate($pd->time)." $pd->athlete_name($pd->athlete_address) - $pd->location, ".$e->tanggal($pd->recorded_at);			
 		} 		
 
 		$this->writeHead($writer, 'Sheet1', "ACARA ".$data['name']." : $race_number $class $gender");
@@ -106,19 +108,31 @@ class ExcelController extends Controller
 		), $this->headerCol);	
 		$this->mergedPos++;
 
-		$dataSet = $e->daftarPeserta($data['id']);
-		$i = 1;
-		if($dataSet!=null){
-			foreach ($dataSet as $k) {
-				if($k->result_time==null) {$i=null; break;};
-				$writer->writeSheetRow('Sheet1', array(
-					$i, $k->name, $k->birth_date, $k->class_name,
-					$k->address, $e->formate($k->result_time), 
-					($k->is_dq==1?"DQ":(($k->is_dn==1?"DN":($k->medal))))
-				), $this->content);	
-				$i++; $this->mergedPos++;
-			}
-		} else $this->writeEmptyData($writer, 'Sheet1');
+        $px = true;
+        for($j=1;$j<4;$j++){
+            $i = 1;
+            $dataSet = $e->daftarPeserta($data['id'], $j);
+            if($dataSet!=null){
+                $px = false;
+                $this->writeHeadSerie($writer, 'Sheet1' ,$j);
+                foreach ($dataSet as $k) {
+                    
+                    if($k->result_time==null && !$k->is_dq && !$k->is_dn) {
+                        $i=null; break;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', array(
+                        $i, $k->name, $e->tanggal($k->birth_date), $k->class_name,
+                        $k->address, $e->formate($k->result_time), 
+                        $e->medals($k->is_dq, $k->is_dn, $k->medal)
+                    ), $this->content); 
+                    
+                    $i++; $this->mergedPos++;
+                }
+            }            
+        }
+
+        if($px) $this->writeEmptyData($writer, 'Sheet1');
 
 		$writer->writeSheetRow('Sheet1',$this->blanksSeparator(), $this->blank);
 
@@ -138,6 +152,12 @@ class ExcelController extends Controller
     	$writer->writeSheetRow($sheet, array('Tidak Ada Data'), $this->content);
     	$writer->markMergedCell('Sheet1', $this->mergedPos,0, $this->mergedPos,6);
     	$this->mergedPos++;    	
+    }
+
+    private function writeHeadSerie($writer, $sheet, $series){
+        $writer->writeSheetRow($sheet, array("SERI $series"), $this->Serie);
+        $writer->markMergedCell('Sheet1', $this->mergedPos,0, $this->mergedPos,6);
+        $this->mergedPos++;     
     }
 
     private function blanksSeparator(){
