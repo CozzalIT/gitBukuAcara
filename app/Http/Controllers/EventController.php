@@ -77,16 +77,32 @@ class EventController extends Controller
     }
 
     public function eventResult($event_id, $race_number_id, $classification_id, $gender){
+      $athlete_lists = Athlete::all();
       $race_number = Event::showRaceNumber($race_number_id);
       $peparnas = Event::selectPeparnas($event_id);
+      $bigThree = Event::showBigThree($event_id);
+      $maxTurn = Event::maxTurn($event_id);
       $peparda = Event::selectPeparda($event_id);
       $event = Event::showAthlete($event_id);
+      // $tes = Event::isFinalResult($event_id, 4);
+      //
+      // dd($tes->final_result);
+      $checkTurn2 = count(DB::table('participants')->select('turn')->where('turn', 2)->where('event_id', $event_id)->get());
+      $checkTurn3 = count(DB::table('participants')->select('turn')->where('turn', 3)->where('event_id', $event_id)->get());
+      $turn2 = ($checkTurn2 > 1) ? true : false ;
+      $turn3 = ($checkTurn3 > 1) ? true : false ;
+
 
       return view('event.result.index', [
+        'athlete_lists' => $athlete_lists,
         'race_number' => $race_number,
+        'bigThree' => $bigThree,
         'peparnas' => $peparnas,
         'peparda' => $peparda,
-        'event' => $event
+        'maxTurn' => $maxTurn,
+        'event' => $event,
+        'turn2' => $turn2,
+        'turn3' => $turn3
       ]);
     }
     //GET PAGE -->
@@ -216,8 +232,82 @@ class EventController extends Controller
         }
     }
 
+    public function finalResult (Request $request) {
+      $this->validate($request, [
+                'time' => 'array|min:1',
+                'time.*'  => 'string|min:9'
+      ]);
+
+      for ($i=0; $i < 8; $i++) {
+        if ($request->final[$i] != 0) {
+          $tmp = explode("/",$request->final[$i]);
+          $final_track = $tmp[0];
+          $athlete_id = $tmp[1];
+          $time[$i] = str_replace(":", "", $request->time[$i+1]);
+          Participant::where('event_id', $request->event_id)
+                        ->where('athlete_id', $athlete_id)
+                        ->update(['final_track' => $final_track, 'final_result' => $time[$i]]);
+
+          if(isset($request->is_dq[$i+1])){
+            Participant::where('event_id', $request->event_id)
+            ->where('athlete_id', $athlete_id)
+            ->update(['is_dq' => 1]);
+          }else{
+            Participant::where('event_id', $request->event_id)
+            ->where('athlete_id', $athlete_id)
+            ->update(['is_dq' => 0]);
+          }
+
+          if(isset($request->is_dn[$i+1])){
+            Participant::where('event_id', $request->event_id)
+            ->where('athlete_id', $athlete_id)
+            ->update(['is_dn' => 1]);
+          }else {
+            Participant::where('event_id', $request->event_id)
+            ->where('athlete_id', $athlete_id)
+            ->update(['is_dn' => 0]);
+          }
+        }
+      }
+
+      sort($time);
+
+      //Reset Medal
+      Participant::where('event_id', $request->event_id)
+                  ->update(['medal' => null]);
+
+      if ((isset($time[0])) && ($time[0] != "9999999")) {
+        //Emas
+        Participant::where('event_id', $request->event_id)
+                      ->where('final_result', $time[0])
+                      ->update(['medal' => 'Emas']);
+      }
+
+      if ((isset($time[1])) && ($time[1] != "9999999")) {
+        //Perak
+        Participant::where('event_id', $request->event_id)
+                      ->where('final_result', $time[1])
+                      ->update(['medal' => 'Perak']);
+      }
+
+      if ((isset($time[2])) && ($time[2] != "9999999")) {
+        //Perunggu
+        Participant::where('event_id', $request->event_id)
+                      ->where('final_result', $time[2])
+                      ->update(['medal' => 'Perunggu']);
+      }
+
+      try{
+          return redirect()
+                 ->back()
+                 ->withSuccess('Berhasil menghapus data');
+      }
+      catch(QueryException $e){
+         return redirect()->back()->with(['error' => "Error."]);
+      }
+    }
+
     public function addResult (Request $request) {
-      // dd($request);
         $this->validate($request, [
                   'time' => 'required|array|min:1',
                   'time.*'  => 'required|string|min:9'
@@ -227,15 +317,15 @@ class EventController extends Controller
           if (isset($request->athlete_id[$i])) {
             $athlete_id[$i] = str_replace(":", "", $request->athlete_id[$i]);
           }
+
+          $time[$i] = "0000000";
           if (isset($request->time[$i])) {
             if (!isset($request->is_dq[$i]) and !isset($request->is_dn[$i])) {
-              if ($request->time[$i] != 0) {
-                $time[$i] = str_replace(":", "", $request->time[$i]);
-                Participant::where('event_id', $request->event_id)
-                              ->where('track', $i)
-                              ->where('turn', $request->turn)
-                              ->update(['result_time' => $time[$i]]);
-              }
+              $time[$i] = str_replace(":", "", $request->time[$i]);
+              Participant::where('event_id', $request->event_id)
+                            ->where('track', $i)
+                            ->where('turn', $request->turn)
+                            ->update(['result_time' => $time[$i]]);
             }
 
             if(isset($request->is_dq[$i])){
@@ -263,33 +353,42 @@ class EventController extends Controller
           }
         }
 
+        for ($i=1; $i < 9; $i++) {
+          if ($time[$i] == "0000000") {
+            $time[$i] = "9999999";
+          }
+        }
         sort($time);
+
         //Reset Medal
         Participant::where('event_id', $request->event_id)
+                    ->where('turn', '=', $request->turn)
                     ->update(['medal' => null]);
 
-        if (isset($time[0])) {
-          //Emas
-          Participant::where('event_id', $request->event_id)
-          ->where('turn', $request->turn)
-          ->where('result_time', $time[0])
-          ->update(['medal' => 'Emas']);
-        }
+        if (Event::maxTurn($request->event_id) == false) {
+          if ((isset($time[0])) && ($time[0] != "9999999")) {
+            //Emas
+            Participant::where('event_id', $request->event_id)
+            ->where('turn', $request->turn)
+            ->where('result_time', $time[0])
+            ->update(['medal' => 'Emas']);
+          }
 
-        if (isset($time[1])) {
-          //Perak
-          Participant::where('event_id', $request->event_id)
-          ->where('turn', $request->turn)
-          ->where('result_time', $time[1])
-          ->update(['medal' => 'Perak']);
-        }
+          if ((isset($time[1])) && ($time[1] != "9999999")) {
+            //Perak
+            Participant::where('event_id', $request->event_id)
+            ->where('turn', $request->turn)
+            ->where('result_time', $time[1])
+            ->update(['medal' => 'Perak']);
+          }
 
-        if (isset($time[2])) {
-          //Perunggu
-          Participant::where('event_id', $request->event_id)
-                      ->where('turn', $request->turn)
-                      ->where('result_time', $time[2])
-                      ->update(['medal' => 'Perunggu']);
+          if ((isset($time[2])) && ($time[2] != "9999999")) {
+            //Perunggu
+            Participant::where('event_id', $request->event_id)
+                        ->where('turn', $request->turn)
+                        ->where('result_time', $time[2])
+                        ->update(['medal' => 'Perunggu']);
+          }
         }
 
         try{

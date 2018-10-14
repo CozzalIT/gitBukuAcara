@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             $this->command->warn("=============================");
             $this->call(RaceNumberSeeder::class);
             $this->call(ClassificationSeeder::class);
+            $this->call(CitySeeder::class);
+            $this->call(AthleteSeeder::class);
             $this->command->warn("");
             $this->command->warn("===========================");
             $this->command->warn("Seeding berhasil.");

@@ -50,8 +50,15 @@
         <div class="panel-body tabs">
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab1" data-toggle="tab">Seri 1</a></li>
-            <li><a href="#tab2" data-toggle="tab">Seri 2</a></li>
-            <li><a href="#tab3" data-toggle="tab">Seri 3</a></li>
+            @if ($turn2 == true)
+              <li><a href="#tab2" data-toggle="tab">Seri 2</a></li>
+            @endif
+            @if ($turn3 == true)
+              <li><a href="#tab3" data-toggle="tab">Seri 3</a></li>
+            @endif
+            @if ($bigThree != false)
+              <li><a href="#tab4" data-toggle="tab">Final</a></li>
+            @endif
           </ul>
           <div class="tab-content">
             <div class="tab-pane fade in active" id="tab1">
@@ -62,6 +69,9 @@
             </div>
             <div class="tab-pane fade" id="tab3">
               @include('event.result.turn3')
+            </div>
+            <div class="tab-pane fade" id="tab4">
+              @include('event.result.final')
             </div>
           </div>
         </div>

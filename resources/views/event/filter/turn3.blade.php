@@ -31,7 +31,7 @@
                   <select class="form-control select2 seri3 lintasan1" data-validation="required" name="seri3[]" id="seri3[]">
                     <option value="0">-- Pilih Atlet --</option>
                     @foreach ($athlete_lists as $athlete_list)
-                      <option value="{{ $i."/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 1, $i) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
+                      <option value="{{ $i."/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 3, $i) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
                     @endforeach
                   </select>
                 </td>

@@ -8,7 +8,7 @@
         <table data-toggle="table" data-url="#"  data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-order="desc">
           <thead>
             <tr>
-              <th data-field="track" data-sortable="true">Lintasan</th>
+              <th data-field="track" data-sortable="true">LINTASAN</th>
               <th data-field="atlet" data-sortable="true">ATLET</th>
               <th data-field="dateBirth" data-sortable="true">TGL LAHIR</th>
               <th data-field="classification" data-sortable="true">KELAS</th>
@@ -34,7 +34,29 @@
                 <td>{{ ($participant != null) ? $participant->classification_name : " " }}</td>
                 <td>
                   @if ($participant != null)
-                    <input class="input-time{{$i}}" type="text" name="time[{{$i}}]" value="{{ ($participant->result_time != null) ? "0".$participant->result_time : " " }}" style="border:none; font-weight:bold;" placeholder="-- : -- : ---" data-validation="required">
+                    @php
+                      switch (strlen($participant->result_time)) {
+                        case 6:
+                          $real_result_time = "0".$participant->result_time;
+                          break;
+                        case 5:
+                          $real_result_time = "00".$participant->result_time;
+                          break;
+                        case 4:
+                          $real_result_time = "000".$participant->result_time;
+                          break;
+                        case 3:
+                          $real_result_time = "0000".$participant->result_time;
+                          break;
+                      }
+                    @endphp
+                    <input
+                      class="input-time{{$i}}"
+                      type="text" name="time[{{$i}}]"
+                      value="{{ ($real_result_time == 0) ? "0000000" : (($real_result_time != null) ? $real_result_time : " ") }}"
+                      style="border:none; font-weight:bold;"
+                      placeholder="-- : -- : ---"
+                      data-validation="required">
                     <input class="" type="hidden" name="athlete_id[{{$i}}]" value="{{ ($participant != null) ? $participant->athlete_id : " " }}">
                     <span class="label label-danger">{{ $errors->first('time.'.$i) }}</span>
                     <script>

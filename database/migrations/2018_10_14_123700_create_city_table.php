@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAthleteTable extends Migration
+class CreateCityTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,16 @@ class CreateAthleteTable extends Migration
      */
     public function up()
     {
-        Schema::create('athletes', function (Blueprint $table) {
+        Schema::create('city', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->date('birth_date');
-            $table->char('gender');
-            $table->unsignedInteger('city_id');
-            $table->unsignedInteger('classification_id');
             $table->timestamps();
+        });
+
+        Schema::table('athletes', function (Blueprint $table) {
+          $table->foreign('city_id')
+                ->references('id')->on('city')
+                ->onDelete('cascade');
         });
     }
 
@@ -32,6 +34,6 @@ class CreateAthleteTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('athletes');
+        Schema::dropIfExists('city');
     }
 }

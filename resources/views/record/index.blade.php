@@ -101,9 +101,9 @@
       </div>
     </div>
   </div><!--/.row-->
+  @include('record.modal')
 @endsection
 
-@include('record.modal')
 
 @section('extra-js')
   <script>

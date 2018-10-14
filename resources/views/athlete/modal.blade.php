@@ -29,33 +29,9 @@
                   <div class="form-group">
                     <select class="form-control input-lg" name="address" required>
                       <option value="0" selected="true" disabled="true">-- Pilih Asal Atlet --</option>
-                      <option value="Kabupaten Bandung">Kabupaten Bandung</option>
-                      <option value="Kabupaten Bandung Barat">Kabupaten Bandung Barat</option>
-                      <option value="Kabupaten Bekasi">Kabupaten Bekasi</option>
-                      <option value="Kabupaten Bogor">Kabupaten Bogor</option>
-                      <option value="Kabupaten Ciamis">Kabupaten Ciamis</option>
-                      <option value="Kabupaten Cianjur">Kabupaten Cianjur</option>
-                      <option value="Kabupaten Cirebon">Kabupaten Cirebon</option>
-                      <option value="Kabupaten Garut">Kabupaten Garut</option>
-                      <option value="Kabupaten Indramayu">Kabupaten Indramayu</option>
-                      <option value="Kabupaten Karawang">Kabupaten Karawang</option>
-                      <option value="Kabupaten Kuningan">Kabupaten Kuningan</option>
-                      <option value="Kabupaten Majalengka">Kabupaten Majalengka</option>
-                      <option value="Kabupaten Pangandaran">Kabupaten Pangandaran</option>
-                      <option value="Kabupaten Purwakarta">Kabupaten Purwakarta</option>
-                      <option value="Kabupaten Subang">Kabupaten Subang</option>
-                      <option value="Kabupaten Sukabumi">Kabupaten Sukabumi</option>
-                      <option value="Kabupaten Sumedang">Kabupaten Sumedang</option>
-                      <option value="Kabupaten Tasikmalaya">Kabupaten Tasikmalaya</option>
-                      <option value="Kota Bandung">Kota Bandung</option>
-                      <option value="Kota Banjar">Kota Banjar</option>
-                      <option value="Kota Bekasi">Kota Bekasi</option>
-                      <option value="Kota Bogor">Kota Bogor</option>
-                      <option value="Kota Cimahi">Kota Cimahi</option>
-                      <option value="Kota Cirebon">Kota Cirebon</option>
-                      <option value="Kota Depok">Kota Depok</option>
-                      <option value="Kota Sukabumi">Kota Sukabumi</option>
-                      <option value="Kota Tasikmalaya">Kota Tasikmalaya</option>
+                      @foreach ($city as $key)
+                        <option value="{{ $key->id }}">{{ $key->name }}</option>
+                      @endforeach
                     </select>
                   </div>
                   <div class="form-group" name="classification">

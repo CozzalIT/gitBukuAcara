@@ -59,8 +59,13 @@
         'as'  => 'addResult'
     ]);
 
+    Route::post('/event/result/final/add',[
+        'uses' => 'EventController@finalResult',
+        'as'  => 'finalResult'
+    ]);
+
     Route::post('/event/printExcel',[
         'uses' => 'ExcelController@index',
         'as'  => 'printExcel'
-    ]);    
+    ]);
     //CRUD -->

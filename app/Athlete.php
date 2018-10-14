@@ -8,6 +8,11 @@ use Carbon\Carbon;
 
 class Athlete extends Model
 {
+    public function race_number()
+    {
+        return $this->belongsToMany('App\RaceNumber', 'athlete_race_numbers', 'athlete_id', 'race_number_id');
+    }
+
     public function checkAthlete($race_number_id)
     {
       $athlete_id = DB::table('athlete_race_numbers')

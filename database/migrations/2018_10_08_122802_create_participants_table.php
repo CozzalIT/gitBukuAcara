@@ -18,9 +18,11 @@ class CreateParticipantsTable extends Migration
             $table->unsignedInteger('athlete_id');
             $table->integer('turn');
             $table->integer('track');
+            $table->integer('final_track')->nullable();
             $table->integer('team')->nullable();
             $table->integer('pra_event_time')->nullable();
             $table->integer('result_time')->nullable();
+            $table->integer('final_result')->nullable();
             $table->boolean('is_dq');
             $table->boolean('is_dn');
             $table->string('medal')->nullable();

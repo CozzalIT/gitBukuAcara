@@ -141,9 +141,9 @@
       </div>
     </div>
   </div><!--/.row-->
+  @include('event.modal')
 @endsection
 
-@include('event.modal')
 
 @section('extra-js')
   <script>

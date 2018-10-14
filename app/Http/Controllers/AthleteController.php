@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Athlete;
 use App\Classification;
 use App\RaceNumber;
+use App\City;
 
 class AthleteController extends Controller
 {
@@ -16,9 +17,11 @@ class AthleteController extends Controller
         $athletes = Athlete::all();
         $classifications = Classification::all();
         $race_numbers = RaceNumber::all();
+        $city = City::all();
         return view('athlete.index', [
           'athletes' => $athletes,
           'classifications' => $classifications,
+          'city' => $city,
           'race_numbers' => $race_numbers
         ]);
     }
@@ -31,7 +34,7 @@ class AthleteController extends Controller
         $athletes->name = $request->name;
         $athletes->gender = $request->gender;
         $athletes->birth_date = $request->birth_date;
-        $athletes->address = $request->address;
+        $athletes->city_id = $request->address;
         $athletes->classification_id = $request->classification;
         $athletes->save();
 

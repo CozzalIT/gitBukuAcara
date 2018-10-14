@@ -94,6 +94,45 @@ class Event extends Model
       return count($isFilled);
     }
 
+    public static function isFilledFinal($event_id, $athlete_id, $final_track)
+    {
+      $isFilled = DB::table('participants')
+                      ->where('event_id', '=', $event_id)
+                      ->where('athlete_id', '=', $athlete_id)
+                      ->where('final_track', '=', $final_track)
+                      ->get();
+
+      return count($isFilled);
+    }
+
+    public static function isFinalResult($event_id, $final_track)
+    {
+      $final_result = DB::table('participants')
+                          ->where('event_id', '=', $event_id)
+                          ->where('final_track', '=', $final_track)
+                          ->get();
+
+      if (count($final_result) > 0) {
+        return $final_result;
+      }else{
+        return false;
+      }
+    }
+
+    public static function showMedal($event_id, $final_track)
+    {
+      $final_result = DB::table('participants')
+                          ->where('event_id', '=', $event_id)
+                          ->where('final_track', '=', $final_track)
+                          ->get();
+
+      if (count($final_result) > 0) {
+        return $final_result;
+      }else{
+        return false;
+      }
+    }
+
     public static function checkMedal($athlete_id)
     {
       $checkMedal = DB::table('participants')
@@ -116,6 +155,28 @@ class Event extends Model
                             )
                           ->where('event_id', '=', $event_id)
                           ->where('turn', '=', $turn)
+                          ->where('track', '=', $track)
+                          ->get();
+
+      if (count($participant) > 0) {
+        return $participant;
+      }else{
+        return false;
+      }
+    }
+
+    public static function showFinalParticipant($athlete_id, $track)
+    {
+      $participant = DB::table('participants')
+                          ->join('athletes','participants.athlete_id', '=', 'athletes.id')
+                          ->join('classifications','athletes.classification_id', '=', 'classifications.id')
+                          ->select(
+                            'athletes.id as athlete_id',
+                            'athletes.name', 'athletes.birth_date',
+                            'classifications.name as classification_name',
+                            'participants.medal', 'participants.result_time', 'participants.is_dq', 'participants.is_dn'
+                            )
+                          ->where('athlete_id', '=', $athlete_id)
                           ->where('track', '=', $track)
                           ->get();
 
@@ -152,13 +213,95 @@ class Event extends Model
 
     public static function showAthlete($event_id)
     {
-      $event = DB::table('events')->where('id', '=', $event_id)->get();
-      return ($event);
+        $event = DB::table('events')->where('id', '=', $event_id)->get();
+        return ($event);
+    }
+
+    public static function maxTurn($event_id)
+    {
+        $turn1 = DB::table('participants')->select('turn')->where('turn', 1)->where('event_id', $event_id)->get();
+        $turn2 = DB::table('participants')->select('turn')->where('turn', 2)->where('event_id', $event_id)->get();
+        $turn3 = DB::table('participants')->select('turn')->where('turn', 3)->where('event_id', $event_id)->get();
+
+        $trn1 = (count($turn1) > 1) ? 1 : 0;
+        $trn2 = (count($turn2) > 1) ? 1 : 0;
+        $trn3 = (count($turn3) > 1) ? 1 : 0;
+
+        $maxTurn = $trn1 + $trn2 + $trn3;
+        if ($maxTurn > 1) {
+          return true;
+        }else{
+          return false;
+        }
+    }
+
+    public static function showBigThree($event_id)
+    {
+        $turn1 = DB::table('participants')->select('turn')->where('turn', 1)->where('event_id', $event_id)->get();
+        $turn2 = DB::table('participants')->select('turn')->where('turn', 2)->where('event_id', $event_id)->get();
+        $turn3 = DB::table('participants')->select('turn')->where('turn', 3)->where('event_id', $event_id)->get();
+
+        $participants = DB::table('participants')->where('event_id', $event_id)->get();
+
+        $i = 0;
+        foreach ($participants as $participant) {
+          if ($participant->result_time != 0) {
+            $result_time[$i] = $participant->result_time;
+            $athlete_id[$i] = $participant->athlete_id;
+          }
+          $i++;
+        }
+
+        if (isset($result_time)) {
+          sort($result_time);
+          for ($i=0; $i < 3; $i++) {
+            if (isset($result_time[$i])) {
+              $bigThree[$i] = DB::table('participants')->select('athlete_id')->where('result_time', $result_time[$i])->get();
+            }
+          }
+
+          $no = 1;
+          for ($i=0; $i < 5; $i++) {
+            if (isset($bigThree[0][$i])) {
+              $realBigThree[$no] = $bigThree[0][$i]->athlete_id;
+            }
+            $no++;
+          }
+          for ($i=0; $i < 5; $i++) {
+            if (isset($bigThree[1][$i])) {
+              $realBigThree[$no] = $bigThree[1][$i]->athlete_id;
+            }
+            $no++;
+          }
+          for ($i=0; $i < 5; $i++) {
+            if (isset($bigThree[2][$i])) {
+              $realBigThree[$no] = $bigThree[2][$i]->athlete_id;
+            }
+            $no++;
+          }
+
+          if (isset($realBigThree)) {
+            sort($realBigThree);
+          }
+        }else{
+          $realBigThree = false;
+        }
+
+        $trn1 = (count($turn1) > 1) ? 1 : 0;
+        $trn2 = (count($turn2) > 1) ? 1 : 0;
+        $trn3 = (count($turn3) > 1) ? 1 : 0;
+
+        $maxTurn = $trn1 + $trn2 + $trn3;
+        if ($maxTurn > 1) {
+          return $realBigThree;
+        }else{
+          return false;
+        }
     }
 
     public static function showRaceNumber($race_number_id)
     {
-      $race_number = DB::table('race_numbers')->where('id', '=', $race_number_id)->get();
-      return ($race_number);
+        $race_number = DB::table('race_numbers')->where('id', '=', $race_number_id)->get();
+        return ($race_number);
     }
 }

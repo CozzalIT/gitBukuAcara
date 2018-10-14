@@ -81,9 +81,9 @@
       </div>
     </div>
   </div><!--/.row-->
+  @include('athlete.modal')
 @endsection
 
-@include('athlete.modal')
 
 @section('extra-js')
   <script>
