@@ -86,7 +86,7 @@ class EventController extends Controller
       $event = Event::showAthlete($event_id);
       // $tes = Event::isFinalResult($event_id, 4);
       //
-      // dd($tes->final_result);
+      // dd($bigThree);
       $checkTurn2 = count(DB::table('participants')->select('turn')->where('turn', 2)->where('event_id', $event_id)->get());
       $checkTurn3 = count(DB::table('participants')->select('turn')->where('turn', 3)->where('event_id', $event_id)->get());
       $turn2 = ($checkTurn2 > 1) ? true : false ;

@@ -48,6 +48,9 @@
                         case 3:
                           $real_result_time = "0000".$participant->result_time;
                           break;
+                        default:
+                          $real_result_time = $participant->result_time;
+                          break;
                       }
                     @endphp
                     <input

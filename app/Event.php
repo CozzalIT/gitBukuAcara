@@ -256,7 +256,11 @@ class Event extends Model
           sort($result_time);
           for ($i=0; $i < 3; $i++) {
             if (isset($result_time[$i])) {
-              $bigThree[$i] = DB::table('participants')->select('athlete_id')->where('result_time', $result_time[$i])->get();
+              $bigThree[$i] = DB::table('participants')
+                                  ->select('athlete_id')
+                                  ->where('result_time', $result_time[$i])
+                                  ->where('event_id', $event_id)
+                                  ->get();
             }
           }
 
