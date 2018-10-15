@@ -89,6 +89,23 @@
                         blocks: [2, 2, 3]
                       });
                     </script>
+                    @else
+                      <input
+                        class="input-time3{{$i}}"
+                        type="text"
+                        name="time[{{$i}}]"
+                        value="0000000"
+                        style="border:none; font-weight:bold;"
+                        placeholder="-- : -- : ---"
+                        data-validation="required">
+                      <span class="label label-danger">{{ $errors->first('time.'.$i) }}</span>
+                      <script>
+                        var cleaveNumeral = new Cleave('.input-time3{{$i}}', {
+                          numericOnly: true,
+                          delimiters: [':', ':'],
+                          blocks: [2, 2, 3]
+                        });
+                      </script>
                   @endif
                 </td>
                 <td>

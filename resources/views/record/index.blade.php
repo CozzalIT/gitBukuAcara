@@ -69,7 +69,26 @@
                       PEREMPUAN
                     @endif
                   </td>
-                  <td data-sortable="true">{{ substr($record->time, 0, -5)." : ".substr(substr($record->time, -5),0,-3)." : ".substr($record->time, -3) }}</td>
+                  @php
+                    switch (strlen($record->time)) {
+                      case 6:
+                        $real_record_time = "0".$record->time;
+                        break;
+                      case 5:
+                        $real_record_time = "00".$record->time;
+                        break;
+                      case 4:
+                        $real_record_time = "000".$record->time;
+                        break;
+                      case 3:
+                        $real_record_time = "0000".$record->time;
+                        break;
+                      default:
+                        $real_record_time = $record->time;
+                        break;
+                    }
+                  @endphp
+                  <td data-sortable="true">{{ substr($real_record_time, 0, -5)." : ".substr(substr($real_record_time, -5),0,-3)." : ".substr($real_record_time, -3) }}</td>
                   <td data-sortable="true">{{ $record->type }}</td>
                   <td data-sortable="true">{{ $record->selectRaceNumber($record->race_number_id) }}</td>
                   <td data-sortable="true">{{ $record->selectClassification($record->classification_id) }}</td>
