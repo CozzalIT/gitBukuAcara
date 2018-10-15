@@ -19,6 +19,11 @@
         'uses' => 'EventController@eventResult',
         'as' => 'eventResult'
     ]);
+
+    Route::get('event/relay/result/{event_id}/{race_number_id}/{gender}',[
+        'uses' => 'EventController@eventRelayResult',
+        'as' => 'eventRelayResult'
+    ]);
     //GET PAGE -->
 
     //AJAX <--

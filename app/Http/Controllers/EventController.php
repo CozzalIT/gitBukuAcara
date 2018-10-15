@@ -28,7 +28,7 @@ class EventController extends Controller
     public function filterRelay($event_id, $race_number_id, $gender){
         $athlete_lists = DB::table('athlete_race_numbers')
                             ->join('athletes', 'athletes.id', '=', 'athlete_race_numbers.athlete_id')
-                            ->select('athletes.id as athlete_id', 'athletes.name')
+                            ->select('athletes.id as athlete_id', 'athletes.name', 'athletes.classification_id')
                             ->where('athlete_race_numbers.race_number_id', $race_number_id)
                             ->where('athletes.gender', $gender)
                             ->get();
@@ -74,6 +74,12 @@ class EventController extends Controller
           'race_number' => $race_number,
           'athlete_lists' => $athlete_lists
         ]);
+    }
+
+    public function eventRelayResult($event_id, $race_number_id, $gender)
+    {
+
+      dd($event_id." ".$race_number_id." ".$gender);
     }
 
     public function eventResult($event_id, $race_number_id, $classification_id, $gender){
@@ -147,7 +153,49 @@ class EventController extends Controller
     //CRUD <--
     public function selectRelay(Request $request)
     {
-        dd($request);
+      $turn = $request->turn;
+
+      DB::table('participants')
+        ->where('event_id', '=', $request->event_id)
+        ->where('turn', '=', $turn)
+        ->delete();
+
+      for ($i=1; $i < 9; $i++) {
+        $track = $i;
+        $maxPoint = 0;
+        for ($j=0; $j < 4; $j++) {
+          if ($request->lintasan[$i][$j] != 0) {
+            $tmp = explode("/",$request->lintasan[$i][$j]);
+            $point[$j] = $tmp[0];
+            $athlete_id[$j] = $tmp[1];
+          }else {
+            $point[$j] = 0;
+            $athlete_id[$j] = null;
+          }
+          $maxPoint = $maxPoint + $point[$j];
+
+          if ($maxPoint > 49) {
+            return redirect()
+            ->back()
+            ->withSuccess(sprintf("Point team ".$i." melebihi ketentuan"));
+          }elseif ($maxPoint < 49) {
+            // code...
+          }
+
+          if ($athlete_id[$j] != null) {
+            // code...
+            $participant = new Participant;
+            $participant->event_id = $request->event_id;
+            $participant->athlete_id = $athlete_id[$j];
+            $participant->turn = $turn;
+            $participant->track = $track;
+            $participant->is_dq = 0;
+            $participant->is_dn = 0;
+            $participant->save();
+          }
+        }
+      }
+      dd($request);
     }
 
     public function selectAthlete(Request $request)

@@ -18,8 +18,8 @@
   <input type="hidden" name="gender" id="gender" value="{{$event[0]->gender}}">
 
   @if(session('success'))
-    <div class="alert bg-info" role="alert">
-      <em class="fa fa-lg fa-check">&nbsp;</em>
+    <div class="alert bg-warning" role="alert">
+      <em class="fa fa-lg fa-warning">&nbsp;</em>
         {{ session('success') }}
       <a href="#" class="pull-right close-btn" >
         <em class="fa fa-lg fa-close"></em>
