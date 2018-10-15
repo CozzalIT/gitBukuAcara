@@ -20,17 +20,28 @@ class Athlete extends Model
                                 ->where('race_number_id', $race_number_id)
                                 ->get();
 
-      // $athletes = DB::table('athletes')
-      //                 ->select('id')
-      //                 ->where('classification_id', $classification_id)
-      //                 ->where('gender', $gender)
-      //                 ->get();
-
-      // foreach ($athlete_race_number as $athlete) {
-      //   $athlete_id = $athlete->id;
-      // }
-
       return $athlete_id;
+    }
+
+    public static function showCity($city_id)
+    {
+        $city = DB::table('city')
+                    ->select('name')
+                    ->where('id', $city_id)
+                    ->get();
+
+        return $city;
+    }
+
+    public static function athleteRaceNumbers($athlete_id)
+    {
+        $race_number = DB::table('athlete_race_numbers')
+                            ->join('race_numbers', 'athlete_race_numbers.race_number_id', '=', 'race_numbers.id')
+                            ->select('race_numbers.id as rn_id', 'race_numbers.name as race_number_name', 'race_numbers.is_relay')
+                            ->where('athlete_race_numbers.athlete_id', $athlete_id)
+                            ->get();
+
+        return $race_number;
     }
 
     public function selectClassification($id)
