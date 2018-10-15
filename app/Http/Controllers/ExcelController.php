@@ -108,35 +108,68 @@ class ExcelController extends Controller
 		), $this->headerCol);	
 		$this->mergedPos++;
 
-        $px = true;
-        for($j=1;$j<4;$j++){
-            $i = 1;
-            $dataSet = $e->daftarPeserta($data['id'], $j);
-            if($dataSet!=null){
-                $px = false;
-                $this->writeHeadSerie($writer, 'Sheet1' ,$j);
-                foreach ($dataSet as $k) {
-                    
-                    if($k->result_time==null && !$k->is_dq && !$k->is_dn) {
-                        $i=null; break;
-                    }
-
-                    $writer->writeSheetRow('Sheet1', array(
-                        $i, $k->name, $e->tanggal($k->birth_date), $k->class_name,
-                        $k->address, $e->formate($k->result_time), 
-                        $e->medals($k->is_dq, $k->is_dn, $k->medal)
-                    ), $this->content); 
-                    
-                    $i++; $this->mergedPos++;
+        $null_ar = [];
+        $Cs = $e->countSeries($data['id']);
+        for($j=1; $j<=$Cs; $j++){
+            $dataSet = $e->daftarPeserta($data['id'], $j);            
+            $this->writeHeadSerie($writer, 'Sheet1' ,$j);
+            $i = 0;
+            foreach ($dataSet as $k) {
+                if($k->result_time==null && !$k->is_dq && !$k->is_dn) return false;
+                
+                if($k->result_time==null){
+                    $null_ar[] = [
+                        "name" => $k->name,
+                        "tanggal" => $e->tanggal($k->birth_date),
+                        "class" =>  $k->class_name,
+                        "address" => $e->citys($k->city_id),
+                        "result" => $e->formate($k->result_time),
+                        "medal" => $e->medals($k->is_dq, $k->is_dn, $k->medal, $Cs)
+                    ];
+                    goto lewat1;
                 }
-            }            
+
+                $i++;
+                $writer->writeSheetRow('Sheet1', array(
+                    $i, $k->name, $e->tanggal($k->birth_date), $k->class_name,
+                    $e->citys($k->city_id), $e->formate($k->result_time), 
+                    $e->medals($k->is_dq, $k->is_dn, $k->medal, $Cs)
+                ), $this->content); 
+                $this->mergedPos++;
+                lewat1:
+            }
+
+            foreach ($null_ar as $k) {
+                $i++;
+                $writer->writeSheetRow('Sheet1', array(
+                    $i, $k['name'], $k['tanggal'], $k['class'],
+                    $k['address'], $k['result'], $k['medal'] 
+                ), $this->content); 
+                $this->mergedPos++;                
+            }
+
         }
 
-        if($px) $this->writeEmptyData($writer, 'Sheet1');
+        if($Cs>1){
+            $null_ar = [];
+            $dataSet = $e->daftarPeserta($data['id'], 0);
+            $this->writeHeadSerie($writer, 'Sheet1' ,0);
+            $i = 0;
+            foreach ($dataSet as $k) {
+                $i++;
+                $writer->writeSheetRow('Sheet1', array(
+                    $i, $k->name, $e->tanggal($k->birth_date), $k->class_name,
+                    $e->citys($k->city_id), $e->formate($k->final_result), 
+                    $e->medals($k->is_dq, $k->is_dn, $k->medal, 0)
+                ), $this->content); 
+                $this->mergedPos++;
+            }                       
+        }
+
+        elseif($Cs==0) $this->writeEmptyData($writer, 'Sheet1');
 
 		$writer->writeSheetRow('Sheet1',$this->blanksSeparator(), $this->blank);
 
-		if($i==null) return false;
     	return true;    	
     }
 
@@ -155,7 +188,12 @@ class ExcelController extends Controller
     }
 
     private function writeHeadSerie($writer, $sheet, $series){
-        $writer->writeSheetRow($sheet, array("SERI $series"), $this->Serie);
+        if($series!=0){
+            $writer->writeSheetRow($sheet, array("SERI $series"), $this->Serie);    
+        } else {
+            $writer->writeSheetRow($sheet, array("FINAL"), $this->Serie);
+        }
+        
         $writer->markMergedCell('Sheet1', $this->mergedPos,0, $this->mergedPos,6);
         $this->mergedPos++;     
     }
