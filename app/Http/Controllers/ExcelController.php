@@ -81,8 +81,8 @@ class ExcelController extends Controller
 
     private function printSingle($writer, $tool, $e, $data){
 
-		$race_number = $tool->selectRaceNumber($data["race_number_id"]);
-		$class = $tool->selectClassification($data["classification_id"]);
+		$race_number = $tool->selectRaceNumber($data["rN_id"]);
+		$class = $tool->selectClassification($data["class_id"]);
 		$gender = $e->genders($data["gender"]);
 
 		$pnD = $tool->selectPeparnas($data["id"]);
