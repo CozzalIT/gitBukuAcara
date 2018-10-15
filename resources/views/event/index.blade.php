@@ -118,14 +118,24 @@
                           @endif
                         </li>
                         <li>
-                          <a
-                            href="{{action('EventController@eventResult', [
-                              'event_id'=>$event->id,
-                              'race_number_id'=> $event->race_number_id,
-                              'classification_id'=> $event->classification_id,
-                              'gender'=> $event->gender])
-                            }}">Input Hasil Lomba
-                          </a>
+                          @if ($event->is_relay == 0)
+                            <a
+                              href="{{action('EventController@eventResult', [
+                                'event_id'=>$event->id,
+                                'race_number_id'=> $event->race_number_id,
+                                'classification_id'=> $event->classification_id,
+                                'gender'=> $event->gender])
+                              }}">Input Hasil Lomba
+                            </a>
+                          @else
+                            <a
+                              href="{{action('EventController@eventRelayResult', [
+                                'event_id'=>$event->id,
+                                'race_number_id'=> $event->race_number_id,
+                                'gender'=> $event->gender])
+                              }}">Input Hasil Lomba
+                            </a>
+                          @endif
                         </li>
                       </ul>
                     </div>

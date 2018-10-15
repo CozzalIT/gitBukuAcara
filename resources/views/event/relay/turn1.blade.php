@@ -28,38 +28,25 @@
                   </center>
                 </td>
                 <td>
-                  @for ($j=1; $j < 6; $j++)
-                    <div class="lintasan{{$i}}-{{$j}}-1 {{ ($j != 1) ? 'hidden' : '' }}">
-                      <select class="form-control select2 seri1" data-validation="required" name="seri1[{{$j}}][]" id="seri1[]">
+                  @for ($j=1; $j < 5; $j++)
+                    <div class="lintasan{{$i}}">
+                      <select class="form-control select2 seri1" data-validation="required" name="lintasan[{{$i}}][]" id="seri1[]">
                         <option value="0">-- Pilih Atlet {{$j}} --</option>
                         @foreach ($athlete_lists as $athlete_list)
-                          <option value="{{ $i."/".$athlete_list->athlete_id }}" {{ (App\Event::isFilled($event[0]->id, $athlete_list->athlete_id, 1, $i) > 0 ? "selected" : "") }}>{{ $athlete_list->name }}</option>
+                          <option value="{{ $athlete_list->classification_id."/".$athlete_list->athlete_id }}">{{ $athlete_list->name }}</option>
                         @endforeach
                       </select>
                       <br>
                     </div>
                   @endfor
                 </td>
-                <script>
-                  $(".lintasan{{$i}}-1-1").change(function(){
-                    $(".lintasan{{$i}}-2-1").removeClass('hidden');
-                  });
-                  $(".lintasan{{$i}}-2-1").change(function(){
-                    $(".lintasan{{$i}}-3-1").removeClass('hidden');
-                  });
-                  $(".lintasan{{$i}}-3-1").change(function(){
-                    $(".lintasan{{$i}}-4-1").removeClass('hidden');
-                  });
-                  $(".lintasan{{$i}}-4-1").change(function(){
-                    $(".lintasan{{$i}}-5-1").removeClass('hidden');
-                  });
-                </script>
               </tr>
             @endfor
           </tbody>
         </table>
         <button type="submit" class="btn btn-primary pull-right" name="button" id="save-seri1">Simpan</button>
         <input type="hidden" name="event_id" id="event_id" value="{{$event[0]->id}}">
+        <input type="hidden" name="turn" value="1">
       </div>
     </div>
   </form>
