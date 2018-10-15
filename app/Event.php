@@ -94,6 +94,17 @@ class Event extends Model
       return count($isFilled);
     }
 
+    public static function isFilledRelay($event_id, $turn, $track)
+    {
+      $isFilledRelay = DB::table('participants')
+                          ->where('event_id', '=', $event_id)
+                          ->where('turn', '=', $turn)
+                          ->where('track', '=', $track)
+                          ->get();
+
+      return $isFilledRelay;
+    }
+
     public static function isFilledFinal($event_id, $athlete_id, $final_track)
     {
       $isFilled = DB::table('participants')

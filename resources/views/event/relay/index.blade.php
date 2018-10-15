@@ -18,8 +18,8 @@
   <input type="hidden" name="gender" id="gender" value="{{$event[0]->gender}}">
 
   @if(session('success'))
-    <div class="alert bg-warning" role="alert">
-      <em class="fa fa-lg fa-warning">&nbsp;</em>
+    <div class="alert bg-info" role="alert">
+      <em class="fa fa-lg fa-check">&nbsp;</em>
         {{ session('success') }}
       <a href="#" class="pull-right close-btn" >
         <em class="fa fa-lg fa-close"></em>
@@ -45,8 +45,8 @@
 
   <div class="row">
     @include('event.relay.turn1')
-    @include('event.relay.turn2')
-    @include('event.relay.turn3')
+    {{-- @include('event.relay.turn2')
+    @include('event.relay.turn3') --}}
   </div><!--/.row-->
 @endsection
 

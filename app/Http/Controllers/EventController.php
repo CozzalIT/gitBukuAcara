@@ -78,8 +78,20 @@ class EventController extends Controller
 
     public function eventRelayResult($event_id, $race_number_id, $gender)
     {
-
-      dd($event_id." ".$race_number_id." ".$gender);
+      $athlete_lists = Athlete::all();
+      $race_number = Event::showRaceNumber($race_number_id);
+      $peparnas = Event::selectPeparnas($event_id);
+      $peparda = Event::selectPeparda($event_id);
+      $event = Event::showAthlete($event_id);
+      // $tes = Event::isFinalResult($event_id, 4);
+      //
+      return view('event.relay_result.index', [
+        'athlete_lists' => $athlete_lists,
+        'race_number' => $race_number,
+        'peparnas' => $peparnas,
+        'peparda' => $peparda,
+        'event' => $event
+      ]);;
     }
 
     public function eventResult($event_id, $race_number_id, $classification_id, $gender){
@@ -195,7 +207,15 @@ class EventController extends Controller
           }
         }
       }
-      dd($request);
+      try{
+          return redirect()
+                 ->back()
+                 ->with(['turn' => $turn] )
+                 ->withSuccess(sprintf("Berhasil menambahkan atlet kedalam acara."));
+      }
+      catch(QueryException $e){
+         return redirect()->back()->with(['error' => "Select atlet gagal!"]);
+      }
     }
 
     public function selectAthlete(Request $request)
