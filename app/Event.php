@@ -153,6 +153,11 @@ class Event extends Model
       return count($checkMedal);
     }
 
+    // public static function showParticipantRelay()
+    // {
+    //
+    // }
+
     public static function showParticipant($event_id, $turn, $track)
     {
       $participant = DB::table('participants')
